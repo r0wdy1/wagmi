@@ -1,6 +1,4 @@
-import { useContractWrite } from 'wagmi'
-import { useState } from 'react'
-import { usePrepareMerkleDropClaim } from '../generated'
+import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 interface ClaimProps {
   address: HexString,
   claim: Claim
@@ -9,26 +7,38 @@ interface ClaimProps {
 export const Claim = (props: ClaimProps) => {
 
   const claim = props.claim;
-  const [zkAddress, setZkAddress] = useState<HexString>("0x");
 
-  const { config: prepareClaimConfig } =
-    usePrepareMerkleDropClaim({ args: [BigInt(claim.amount), props.merkleRoot, claim.proof, zkAddress] });
+  const { config: config } = usePrepareContractWrite({
+    abi: [
+      {
+        stateMutability: 'nonpayable',
+        type: 'function',
+        inputs: [
+          { name: 'cumulativeAmount', internalType: 'uint256', type: 'uint256' },
+          { name: 'expectedMerkleRoot', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'merkleProof', internalType: 'bytes32[]', type: 'bytes32[]' },
+          { name: 'zkAddress', internalType: 'bytes', type: 'bytes' },
+        ],
+        name: 'claim',
+        outputs: [],
+      },
+    ],
+    address: '0xC6A4A86747aA66FC0eDd1b6033886281dc78e72e',
+    functionName: 'claim', args: [BigInt(0), props.merkleRoot, claim.proof, '0x0'] })
 
-  const { write: prepareClaim, data, error, isLoading, isError, isSuccess } =
-    useContractWrite(prepareClaimConfig)  
-  return (
-    <div>
-      <div>Claim reward</div>
-      <input type="text" name="zk Address" id="zkAddress" onChange={(e) => setZkAddress(`0x${e.currentTarget.value}`)} />
-      <button
-        type='button'
-        disabled={isLoading || !prepareClaim}
-        onClick={() => prepareClaim?.()}
-      >
-        claim
-      </button>
-      {isError && <div>{error?.message}</div>}
-      {isSuccess && <div>Transaction hash: {data?.hash}</div>}
-    </div>
-  )
+const { write, isLoading } =
+  useContractWrite(config)
+
+return (
+  <div>
+    <div>Claim reward</div>
+    <button
+      type='button'
+      disabled={isLoading || !write}
+      onClick={() => write?.()}
+    >
+      claim
+    </button>
+  </div>
+)
 }
