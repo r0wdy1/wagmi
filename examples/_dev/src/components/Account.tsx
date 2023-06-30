@@ -1,4 +1,4 @@
-import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from 'wagmi'
+import { useAccount, useDisconnect, useEnsAvatar, useEnsName, useContractRead, useToken } from 'wagmi'
 
 import { useIsMounted } from '../hooks'
 import { Balance } from './Balance'
@@ -16,7 +16,12 @@ import { WatchPendingTransactions } from './WatchPendingTransactions'
 // import { WriteContract } from './WriteContract'
 import { WriteContractPrepared } from './WriteContractPrepared'
 import merkleDataRaw from '../data.json'
-import { Claim } from './Claim'
+import { ClaimReward } from './ClaimReward'
+import { ConnectKitButton } from 'connectkit'
+import { merkleDropContractConfig } from './contracts'
+import { useErc20BalanceOf, useMerkleDropCumulativeClaimed, useMerkleDropRead, useMerkleDropToken } from '../generated'
+import { Drop, toHexString } from '../model/Claims'
+import { ClaimStats } from './ClaimStats'
 
 export const Account = () => {
   const isMounted = useIsMounted()
@@ -28,10 +33,6 @@ export const Account = () => {
     address: account?.address,
     chainId: 1,
   })
-  const { data: ensAvatar } = useEnsAvatar({
-    name: ensName,
-    chainId: 1,
-  })
   const disconnect = useDisconnect()
 
   const merkleData = merkleDataRaw as Drop;
@@ -39,24 +40,13 @@ export const Account = () => {
 
   return (
     <div>
+      <ConnectKitButton />
       <div>
-        {account?.address && (
-          <div>
-            <button type='button' onClick={() => disconnect.disconnect()}>
-              Disconnect
-            </button>
-          </div>
 
-        )}
-        {isMounted && account?.connector?.name && (
+        {/* {isMounted && account?.connector?.name && (
           <span>Connected to {account.connector.name}</span>
-        )}
-        {account?.address && claim && (
-          <div>
-            <p>You are eligible for {claim.amount} tokens</p>
-            <Claim address={account.address} claim={claim} merkleRoot={merkleData.merkleRoot} />
-          </div>
-        )}
+        )} */}
+        {account?.address && claim && (<ClaimStats claim={claim} address={account.address} merkleRoot={merkleData.merkleRoot} />)}
 
       </div>
 
@@ -64,57 +54,15 @@ export const Account = () => {
         <>
           {true && (
             <>
-              <h4>Balance</h4>
-              <Balance />
-
               <h4>Block Number</h4>
               <BlockNumber />
-
-
-              {/* 
-              <h4>Send Transaction</h4>
-              <SendTransaction />
-
-              <h4>Send Transaction Prepared</h4>
-              <SendTransactionPrepared /> */}
             </>
           )}
-
-          {/* <h4>Read Contract</h4>
-          <ReadContract /> */}
-
-          {/* <h4>Read Contracts</h4>
-          <ReadContracts /> */}
-
-          {/* <h4>Read Contracts Infinite</h4>
-          <ReadContractsInfinite /> */}
-
           <h4>Watch Pending Transactions</h4>
           <WatchPendingTransactions />
 
-          {/* <h4>Write Contract</h4>
-          <WriteContract /> */}
-
-          <h4>Write Contract Prepared</h4>
-          <WriteContractPrepared />
-
           <h4>Contract Events</h4>
           <WatchContractEvents />
-
-
-
-          {/* {true && (
-            <>
-              <h4>Sign Message</h4>
-              <SignMessage />
-
-              <h4>Sign Typed Data</h4>
-              <SignTypedData />
-
-              <h4>Token</h4>
-              <Token />
-            </>
-          )} */}
         </>
       )}
     </div>

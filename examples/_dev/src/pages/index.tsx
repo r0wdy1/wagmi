@@ -7,7 +7,7 @@ const Page = () => {
   if (!isMounted) return null
   return (
     <>
-      <Connect />
+      {/* <Connect /> */}
       <Account />
       {/* <NetworkSwitcher /> */}
     </>
