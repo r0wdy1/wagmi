@@ -3,7 +3,7 @@ import type { Log } from 'viem'
 import { stringify } from 'viem'
 import { useContractEvent } from 'wagmi'
 
-import { usdcContractConfig, wagmiContractConfig } from './contracts'
+import { usdcContractConfig, wagmiContractConfig, merkleDropContractConfig } from './contracts'
 
 export function WatchContractEvents() {
   const [usdcLogs, setUsdcLogs] = useState<Log[]>([])
@@ -19,10 +19,16 @@ export function WatchContractEvents() {
     eventName: 'Transfer',
     listener: (logs) => setWagmiLogs((x) => [...x, ...logs]),
   })
+  const [claimLogs, setClaimLogs] = useState<Log[]>([])
+  useContractEvent({
+    ...merkleDropContractConfig,
+    eventName: 'Claimed',
+    listener: (logs) => setClaimLogs((x) => [...x, ...logs]),
+  })
 
   return (
     <div>
-      <details>
+      {/* <details>
         <summary>{usdcLogs.length} USDC `Transfer`s logged</summary>
         {usdcLogs
           .reverse()
@@ -33,6 +39,13 @@ export function WatchContractEvents() {
       <details>
         <summary>{wagmiLogs.length} wagmi `Transfer`s logged</summary>
         {wagmiLogs
+          .reverse()
+          .map((log) => stringify(log))
+          .join('\n\n\n\n')}
+      </details> */}
+      <details>
+        <summary>{claimLogs.length} claims logged</summary>
+        {claimLogs
           .reverse()
           .map((log) => stringify(log))
           .join('\n\n\n\n')}

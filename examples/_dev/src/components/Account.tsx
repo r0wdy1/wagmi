@@ -13,8 +13,10 @@ import { SignTypedData } from './SignTypedData'
 import { Token } from './Token'
 import { WatchContractEvents } from './WatchContractEvents'
 import { WatchPendingTransactions } from './WatchPendingTransactions'
-import { WriteContract } from './WriteContract'
+// import { WriteContract } from './WriteContract'
 import { WriteContractPrepared } from './WriteContractPrepared'
+import merkleDataRaw from '../data.json'
+import { Claim } from './Claim'
 
 export const Account = () => {
   const isMounted = useIsMounted()
@@ -32,30 +34,30 @@ export const Account = () => {
   })
   const disconnect = useDisconnect()
 
+  const merkleData = merkleDataRaw as Drop;
+  const claim = merkleData.claims[account.address ?? '0xdead']
+
   return (
     <div>
       <div>
-        {ensName ?? account?.address}
-        {ensName ? ` (${account?.address})` : null}
-      </div>
-
-      {ensAvatar && (
-        <img
-          alt='ENS avatar'
-          src={ensAvatar}
-          style={{ height: 40, width: 40 }}
-        />
-      )}
-
-      <div>
         {account?.address && (
-          <button type='button' onClick={() => disconnect.disconnect()}>
-            Disconnect
-          </button>
+          <div>
+            <button type='button' onClick={() => disconnect.disconnect()}>
+              Disconnect
+            </button>
+          </div>
+
         )}
         {isMounted && account?.connector?.name && (
           <span>Connected to {account.connector.name}</span>
         )}
+        {account?.address && claim && (
+          <div>
+            <p>You are eligible for {claim.amount} tokens</p>
+            <Claim address={account.address} claim={claim} merkleRoot={merkleData.merkleRoot} />
+          </div>
+        )}
+
       </div>
 
       {true && (
@@ -68,28 +70,30 @@ export const Account = () => {
               <h4>Block Number</h4>
               <BlockNumber />
 
+
+              {/* 
               <h4>Send Transaction</h4>
               <SendTransaction />
 
               <h4>Send Transaction Prepared</h4>
-              <SendTransactionPrepared />
+              <SendTransactionPrepared /> */}
             </>
           )}
 
-          <h4>Read Contract</h4>
-          <ReadContract />
+          {/* <h4>Read Contract</h4>
+          <ReadContract /> */}
 
-          <h4>Read Contracts</h4>
-          <ReadContracts />
+          {/* <h4>Read Contracts</h4>
+          <ReadContracts /> */}
 
-          <h4>Read Contracts Infinite</h4>
-          <ReadContractsInfinite />
+          {/* <h4>Read Contracts Infinite</h4>
+          <ReadContractsInfinite /> */}
 
           <h4>Watch Pending Transactions</h4>
           <WatchPendingTransactions />
 
-          <h4>Write Contract</h4>
-          <WriteContract />
+          {/* <h4>Write Contract</h4>
+          <WriteContract /> */}
 
           <h4>Write Contract Prepared</h4>
           <WriteContractPrepared />
@@ -97,7 +101,9 @@ export const Account = () => {
           <h4>Contract Events</h4>
           <WatchContractEvents />
 
-          {true && (
+
+
+          {/* {true && (
             <>
               <h4>Sign Message</h4>
               <SignMessage />
@@ -108,7 +114,7 @@ export const Account = () => {
               <h4>Token</h4>
               <Token />
             </>
-          )}
+          )} */}
         </>
       )}
     </div>

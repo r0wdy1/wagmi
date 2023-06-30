@@ -9,7 +9,7 @@ const Page = () => {
     <>
       <Connect />
       <Account />
-      <NetworkSwitcher />
+      {/* <NetworkSwitcher /> */}
     </>
   )
 }

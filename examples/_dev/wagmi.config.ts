@@ -7,7 +7,7 @@ export default defineConfig({
     {
       name: 'Wagmipet',
       address: {
-        1: '0xecb504d39723b0be0e3a9aa33d646642d1051ee1',
+        5: '0xecb504d39723b0be0e3a9aa33d646642d1051ee1',
       },
       abi: [
         {
@@ -19,26 +19,46 @@ export default defineConfig({
         },
       ],
     },
+
+    {
+      name: 'MerkleDrop',
+      address: {
+        5: '0xC6A4A86747aA66FC0eDd1b6033886281dc78e72e'
+      },
+      abi: [
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "cumulativeAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "expectedMerkleRoot",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32[]",
+              "name": "merkleProof",
+              "type": "bytes32[]"
+            },
+            {
+              "internalType": "bytes",
+              "name": "zkAddress",
+              "type": "bytes"
+            }
+          ],
+          "name": "claim",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ]
+    }
   ],
   plugins: [
     erc(),
-    etherscan({
-      apiKey: process.env.ETHERSCAN_API_KEY!,
-      chainId: 1,
-      contracts: [
-        {
-          name: 'WagmiMintEtherscan',
-          address: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
-        },
-        {
-          name: 'EnsRegistry',
-          address: {
-            1: '0x314159265dd8dbb310642f98f50c066173c1259b',
-            5: '0x112234455c3a32fd11230c42e7bccd4a84e02010',
-          },
-        },
-      ],
-    }),
     react(),
     actions(),
   ],

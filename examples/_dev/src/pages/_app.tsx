@@ -18,8 +18,8 @@ import { publicProvider } from 'wagmi/providers/public'
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [mainnet, goerli, optimism, avalanche],
   [
-    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! }),
-    infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_API_KEY! }),
+    // alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! }),
+    // infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_API_KEY! }),
     publicProvider(),
   ],
 )
@@ -33,49 +33,49 @@ const config = createConfig({
         UNSTABLE_shimOnConnectSelectAccount: true,
       },
     }),
-    new CoinbaseWalletConnector({
-      chains,
-      options: {
-        appName: 'wagmi',
-      },
-    }),
-    new WalletConnectConnector({
-      chains,
-      options: {
-        projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? '',
-      },
-    }),
-    new WalletConnectLegacyConnector({
-      chains,
-      options: {
-        qrcode: true,
-      },
-    }),
-    new LedgerConnector({
-      chains,
-      options: {
-        projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? '',
-      },
-    }),
-    new InjectedConnector({
-      chains,
-      options: {
-        name: (detectedName) =>
-          `Injected (${
-            typeof detectedName === 'string'
-              ? detectedName
-              : detectedName.join(', ')
-          })`,
-        shimDisconnect: true,
-      },
-    }),
-    new SafeConnector({
-      chains,
-      options: {
-        allowedDomains: [/https:\/\/app.safe.global$/],
-        debug: false,
-      },
-    }),
+    // new CoinbaseWalletConnector({
+    //   chains,
+    //   options: {
+    //     appName: 'wagmi',
+    //   },
+    // }),
+    // new WalletConnectConnector({
+    //   chains,
+    //   options: {
+    //     projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? '',
+    //   },
+    // }),
+    // new WalletConnectLegacyConnector({
+    //   chains,
+    //   options: {
+    //     qrcode: true,
+    //   },
+    // }),
+    // new LedgerConnector({
+    //   chains,
+    //   options: {
+    //     projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? '',
+    //   },
+    // }),
+    // new InjectedConnector({
+    //   chains,
+    //   options: {
+    //     name: (detectedName) =>
+    //       `Injected (${
+    //         typeof detectedName === 'string'
+    //           ? detectedName
+    //           : detectedName.join(', ')
+    //       })`,
+    //     shimDisconnect: true,
+    //   },
+    // }),
+    // new SafeConnector({
+    //   chains,
+    //   options: {
+    //     allowedDomains: [/https:\/\/app.safe.global$/],
+    //     debug: false,
+    //   },
+    // }),
   ],
   publicClient,
   webSocketPublicClient,
